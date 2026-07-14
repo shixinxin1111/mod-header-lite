@@ -4,10 +4,14 @@ const ICON_PATHS: Record<ActionIconState, Record<string, string>> = {
   enabled: {
     '16': 'icons/icon16.png',
     '32': 'icons/icon32.png',
+    '48': 'icons/icon48.png',
+    '128': 'icons/icon128.png',
   },
   disabled: {
     '16': 'icons/icon16-disabled.png',
     '32': 'icons/icon32-disabled.png',
+    '48': 'icons/icon48-disabled.png',
+    '128': 'icons/icon128-disabled.png',
   },
 };
 

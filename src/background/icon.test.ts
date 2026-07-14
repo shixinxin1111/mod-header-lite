@@ -21,6 +21,8 @@ describe('updateActionIcon', () => {
       path: {
         '16': 'icons/icon16-disabled.png',
         '32': 'icons/icon32-disabled.png',
+        '48': 'icons/icon48-disabled.png',
+        '128': 'icons/icon128-disabled.png',
       },
     });
     expect(setTitle).toHaveBeenCalledWith({
@@ -42,6 +44,8 @@ describe('updateActionIcon', () => {
       path: {
         '16': 'icons/icon16.png',
         '32': 'icons/icon32.png',
+        '48': 'icons/icon48.png',
+        '128': 'icons/icon128.png',
       },
     });
     expect(setTitle).toHaveBeenCalledWith({

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
+import { updateActionIcon } from '@/background/icon';
 import { requestRulesSync } from '@/shared/messages';
 import { createDefaultState } from '@/shared/defaults';
 import {
@@ -49,6 +50,13 @@ export function useExtensionState() {
           setState(storedState);
           setSaveError(null);
         }
+
+        // popup 打开时兜底同步一次工具栏图标：MV3 service worker 是事件驱动的
+        // 懒加载，浏览器重启 / 扩展重载后可能未被唤醒，导致图标停留在 manifest
+        // 里的 default_icon 上。这里显式对齐当前存储中的启停状态。
+        void updateActionIcon(storedState.extensionEnabled).catch(() => {
+          // 图标同步失败不影响主流程，storage.onChanged 仍会兜底。
+        });
       } catch (error) {
         if (!cancelled) {
           if (import.meta.env.DEV) {

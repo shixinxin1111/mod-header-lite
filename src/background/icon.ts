@@ -21,9 +21,15 @@ export async function updateActionIcon(enabled: boolean) {
   }
 
   const state: ActionIconState = enabled ? 'enabled' : 'disabled';
+  const resolvedPaths = Object.fromEntries(
+    Object.entries(ICON_PATHS[state]).map(([size, path]) => [
+      size,
+      chrome.runtime.getURL(path),
+    ]),
+  );
 
   await chrome.action.setIcon({
-    path: ICON_PATHS[state],
+    path: resolvedPaths,
   });
 
   await chrome.action.setTitle({

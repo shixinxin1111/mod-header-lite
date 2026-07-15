@@ -13,16 +13,19 @@ describe('updateActionIcon', () => {
 
     vi.stubGlobal('chrome', {
       action: { setIcon, setTitle },
+      runtime: {
+        getURL: (path: string) => `chrome-extension://test/${path}`,
+      },
     });
 
     await updateActionIcon(false);
 
     expect(setIcon).toHaveBeenCalledWith({
       path: {
-        '16': 'icons/icon16-disabled.png',
-        '32': 'icons/icon32-disabled.png',
-        '48': 'icons/icon48-disabled.png',
-        '128': 'icons/icon128-disabled.png',
+        '16': 'chrome-extension://test/icons/icon16-disabled.png',
+        '32': 'chrome-extension://test/icons/icon32-disabled.png',
+        '48': 'chrome-extension://test/icons/icon48-disabled.png',
+        '128': 'chrome-extension://test/icons/icon128-disabled.png',
       },
     });
     expect(setTitle).toHaveBeenCalledWith({
@@ -36,16 +39,19 @@ describe('updateActionIcon', () => {
 
     vi.stubGlobal('chrome', {
       action: { setIcon, setTitle },
+      runtime: {
+        getURL: (path: string) => `chrome-extension://test/${path}`,
+      },
     });
 
     await updateActionIcon(true);
 
     expect(setIcon).toHaveBeenCalledWith({
       path: {
-        '16': 'icons/icon16.png',
-        '32': 'icons/icon32.png',
-        '48': 'icons/icon48.png',
-        '128': 'icons/icon128.png',
+        '16': 'chrome-extension://test/icons/icon16.png',
+        '32': 'chrome-extension://test/icons/icon32.png',
+        '48': 'chrome-extension://test/icons/icon48.png',
+        '128': 'chrome-extension://test/icons/icon128.png',
       },
     });
     expect(setTitle).toHaveBeenCalledWith({

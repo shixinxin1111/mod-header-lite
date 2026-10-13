@@ -1,24 +1,9 @@
 import { Plus } from 'lucide-react';
 
+import { getProfileBadge } from '@/popup/profileBadge';
 import type { Profile } from '@/shared/types';
 
 import { ProfileItem } from './ProfileItem';
-
-function getProfileBadge(name: string) {
-  const normalized = name.replace(/\s+/g, '').trim();
-
-  if (!normalized) {
-    return '配';
-  }
-
-  const defaultNameMatch = normalized.match(/^配置(\d+)$/);
-
-  if (defaultNameMatch?.[1]) {
-    return defaultNameMatch[1];
-  }
-
-  return normalized.slice(0, 2);
-}
 
 type ProfileSidebarProps = {
   profiles: Profile[];

@@ -1,18 +1,15 @@
-import { AlertTriangle, ShieldCheck, Trash2 } from 'lucide-react';
+import { AlertTriangle, ShieldCheck } from 'lucide-react';
 import { useMemo } from 'react';
 
 import { updateActionIcon } from '@/background/icon';
+import { useConfigImportExport } from '@/hooks/useConfigImportExport';
 import { useExtensionState } from '@/hooks/useExtensionState';
-import { HeaderEditor } from '@/popup/components/HeaderEditor';
-import { ProfileNameEditor } from '@/popup/components/ProfileNameEditor';
+import { ActiveProfileEditor } from '@/popup/components/ActiveProfileEditor';
+import { ConfigImportDialog } from '@/popup/components/ConfigImportDialog';
+import { ConfigToast } from '@/popup/components/ConfigToast';
 import { ProfileSidebar } from '@/popup/components/ProfileSidebar';
 import { Switch } from '@/popup/components/Switch';
-import { UrlFilterEditor } from '@/popup/components/UrlFilterEditor';
-import {
-  createHeaderItem,
-  createProfile,
-  createUrlFilterItem,
-} from '@/shared/defaults';
+import { createProfile, createUrlFilterItem } from '@/shared/defaults';
 import { getActiveProfile } from '@/shared/dnr';
 import { urlToOriginRegexPattern } from '@/shared/urlPattern';
 
@@ -38,6 +35,19 @@ export default function App() {
     () => (state ? getActiveProfile(state) : null),
     [state],
   );
+  const {
+    feedback,
+    importDraft,
+    importError,
+    importDialogOpen,
+    canRestoreImport,
+    handleCopyConfig,
+    handleOpenImportDialog,
+    handleCancelImport,
+    handleConfirmImport,
+    handleRestoreImport,
+    handleChangeImportDraft,
+  } = useConfigImportExport(state, activeProfile, updateState);
 
   if (loading || !state) {
     return <LoadingSkeleton />;
@@ -148,7 +158,7 @@ export default function App() {
   };
 
   return (
-    <div className="flex h-full flex-col overflow-hidden bg-[#f8fafc] text-[#172033]">
+    <div className="relative flex h-full flex-col overflow-hidden bg-[#f8fafc] text-[#172033]">
       <header className="flex h-10 items-center justify-between gap-2 border-b border-[#e2e8f0] bg-white px-2.5">
         <div className="flex min-w-0 items-center gap-2">
           <div className="flex h-6 w-6 items-center justify-center rounded-[7px] bg-[#2563eb] text-white shadow-[0_2px_5px_rgba(37,99,235,0.22)]">
@@ -209,98 +219,16 @@ export default function App() {
 
         <div className="grid min-h-0 grid-rows-[34px_minmax(0,1fr)_minmax(0,1fr)] bg-white shadow-[inset_1px_0_0_#e2e8f0]">
           {activeProfile ? (
-            <>
-              <div className="flex min-w-0 items-center gap-1.5 border-b border-[#e2e8f0] bg-[#f8fafc] pl-0 pr-2">
-                <ProfileNameEditor
-                  key={activeProfile.id}
-                  value={activeProfile.name}
-                  onCommit={(name) =>
-                    updateActiveProfile((profile) => ({
-                      ...profile,
-                      name,
-                    }))
-                  }
-                />
-                <div className="shrink-0 rounded bg-white px-1.5 py-0.5 text-[10px] font-medium text-[#64748b] ring-1 ring-inset ring-[#e2e8f0]">
-                  {enabledHeaderCount} 请求头 · {enabledFilterCount} 规则
-                </div>
-                <button
-                  type="button"
-                  onClick={() => handleDeleteProfile(activeProfile.id)}
-                  aria-label="删除当前配置"
-                  className="icon-button danger h-7 w-7"
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                </button>
-              </div>
-
-              <HeaderEditor
-                headers={activeProfile.headers}
-                onAdd={() =>
-                  updateActiveProfile((profile) => ({
-                    ...profile,
-                    headers: [...profile.headers, createHeaderItem()],
-                  }))
-                }
-                onChange={(headerId, field, value) =>
-                  updateActiveProfile((profile) => ({
-                    ...profile,
-                    headers: profile.headers.map((item) =>
-                      item.id === headerId ? { ...item, [field]: value } : item,
-                    ),
-                  }))
-                }
-                onToggle={(headerId) =>
-                  updateActiveProfile((profile) => ({
-                    ...profile,
-                    headers: profile.headers.map((item) =>
-                      item.id === headerId
-                        ? { ...item, enabled: !item.enabled }
-                        : item,
-                    ),
-                  }))
-                }
-                onDelete={(headerId) =>
-                  updateActiveProfile((profile) => ({
-                    ...profile,
-                    headers: profile.headers.filter(
-                      (item) => item.id !== headerId,
-                    ),
-                  }))
-                }
-              />
-
-              <UrlFilterEditor
-                filters={activeProfile.urlFilters}
-                onAdd={() => void handleAddUrlFilter()}
-                onChange={(filterId, value) =>
-                  updateActiveProfile((profile) => ({
-                    ...profile,
-                    urlFilters: profile.urlFilters.map((item) =>
-                      item.id === filterId ? { ...item, pattern: value } : item,
-                    ),
-                  }))
-                }
-                onToggle={(filterId) =>
-                  updateActiveProfile((profile) => ({
-                    ...profile,
-                    urlFilters: profile.urlFilters.map((item) =>
-                      item.id === filterId
-                        ? { ...item, enabled: !item.enabled }
-                        : item,
-                    ),
-                  }))
-                }
-                onDelete={(filterId) =>
-                  updateActiveProfile((profile) => ({
-                    ...profile,
-                    urlFilters: profile.urlFilters.filter(
-                      (item) => item.id !== filterId,
-                    ),
-                  }))
-                }
-              />
-            </>
+            <ActiveProfileEditor
+              profile={activeProfile}
+              enabledHeaderCount={enabledHeaderCount}
+              enabledFilterCount={enabledFilterCount}
+              onUpdateProfile={updateActiveProfile}
+              onDeleteProfile={() => handleDeleteProfile(activeProfile.id)}
+              onAddUrlFilter={() => void handleAddUrlFilter()}
+              onCopyConfig={handleCopyConfig}
+              onOpenImportDialog={handleOpenImportDialog}
+            />
           ) : (
             <>
               <div className="border-b border-[#e2e8f0] bg-[#f8fafc]" />
@@ -311,6 +239,22 @@ export default function App() {
           )}
         </div>
       </div>
+      {importDialogOpen ? (
+        <ConfigImportDialog
+          value={importDraft}
+          error={importError}
+          onChange={handleChangeImportDraft}
+          onCancel={handleCancelImport}
+          onConfirm={handleConfirmImport}
+        />
+      ) : null}
+      {feedback ? (
+        <ConfigToast
+          message={feedback}
+          canUndo={canRestoreImport}
+          onUndo={handleRestoreImport}
+        />
+      ) : null}
     </div>
   );
 }

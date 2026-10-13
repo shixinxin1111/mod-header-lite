@@ -1,0 +1,28 @@
+src/popup/profileBadge.ts
+  adcaa6d11dbf5a61 1-35
+src/popup/components/ProfileSidebar.tsx
+  adcaa6d11dbf5a61 3
+src/popup/profileBadge.test.ts
+  adcaa6d11dbf5a61 1-26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "72a091294a40ea5ba8c7d9f5a0fcce91d8a12a3e",
+  "prompts": {
+    "adcaa6d11dbf5a61": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6a82c2dffb600ec03a1c258b",
+        "model": "gpt-5.5__dev"
+      },
+      "human_author": "shixinxin.star <shixinxin.star@bytedance.com>",
+      "total_additions": 63,
+      "total_deletions": 17,
+      "accepted_lines": 62,
+      "overriden_lines": 0
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {}
+}

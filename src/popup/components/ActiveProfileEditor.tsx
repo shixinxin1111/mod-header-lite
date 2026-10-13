@@ -1,6 +1,7 @@
 import { HeaderEditor } from '@/popup/components/HeaderEditor';
 import { ProfileToolbar } from '@/popup/components/ProfileToolbar';
 import { UrlFilterEditor } from '@/popup/components/UrlFilterEditor';
+import { reorderByDrop } from '@/popup/reorder';
 import { createHeaderItem } from '@/shared/defaults';
 import type { Profile } from '@/shared/types';
 
@@ -74,6 +75,17 @@ export function ActiveProfileEditor({
             ),
           }))
         }
+        onReorder={(sourceHeaderId, targetHeaderId, position) =>
+          onUpdateProfile((currentProfile) => ({
+            ...currentProfile,
+            headers: reorderByDrop(
+              currentProfile.headers,
+              sourceHeaderId,
+              targetHeaderId,
+              position,
+            ),
+          }))
+        }
       />
 
       <UrlFilterEditor
@@ -100,6 +112,17 @@ export function ActiveProfileEditor({
             ...currentProfile,
             urlFilters: currentProfile.urlFilters.filter(
               (item) => item.id !== filterId,
+            ),
+          }))
+        }
+        onReorder={(sourceFilterId, targetFilterId, position) =>
+          onUpdateProfile((currentProfile) => ({
+            ...currentProfile,
+            urlFilters: reorderByDrop(
+              currentProfile.urlFilters,
+              sourceFilterId,
+              targetFilterId,
+              position,
             ),
           }))
         }

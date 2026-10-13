@@ -1,7 +1,10 @@
-import { Plus, Trash2 } from 'lucide-react';
+import { useState, type DragEvent } from 'react';
+import { GripVertical, Plus, Trash2 } from 'lucide-react';
 
 import { EmptyState } from '@/popup/components/EmptyState';
 import { SectionCard } from '@/popup/components/SectionCard';
+import { setRowDragPreview } from '@/popup/dragPreview';
+import type { DropPosition } from '@/popup/reorder';
 import type { UrlFilterItem } from '@/shared/types';
 import { validateRegexPattern } from '@/shared/validation';
 
@@ -11,6 +14,11 @@ type UrlFilterEditorProps = {
   onChange: (filterId: string, value: string) => void;
   onToggle: (filterId: string) => void;
   onDelete: (filterId: string) => void;
+  onReorder: (
+    sourceFilterId: string,
+    targetFilterId: string,
+    position: DropPosition,
+  ) => void;
 };
 
 export function UrlFilterEditor({
@@ -19,7 +27,80 @@ export function UrlFilterEditor({
   onChange,
   onToggle,
   onDelete,
+  onReorder,
 }: UrlFilterEditorProps) {
+  const [draggedFilterId, setDraggedFilterId] = useState<string | null>(null);
+  const [dragOverFilter, setDragOverFilter] = useState<{
+    id: string;
+    position: DropPosition;
+  } | null>(null);
+
+  const handleDragStart = (
+    event: DragEvent<HTMLDivElement>,
+    filterId: string,
+  ) => {
+    const target = event.target;
+
+    if (
+      target instanceof HTMLElement &&
+      target.closest('input, textarea, select, button:not(.drag-handle)')
+    ) {
+      event.preventDefault();
+      return;
+    }
+
+    setDraggedFilterId(filterId);
+    event.dataTransfer.effectAllowed = 'move';
+    event.dataTransfer.setData('text/plain', filterId);
+    setRowDragPreview(
+      event.currentTarget,
+      event.dataTransfer,
+      event.nativeEvent.offsetX,
+      event.nativeEvent.offsetY,
+    );
+  };
+
+  const handleDragOver = (
+    event: DragEvent<HTMLDivElement>,
+    filterId: string,
+  ) => {
+    const sourceId = draggedFilterId ?? event.dataTransfer.getData('text/plain');
+
+    if (!sourceId || sourceId === filterId) {
+      return;
+    }
+
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+
+    const { top, height } = event.currentTarget.getBoundingClientRect();
+    const position: DropPosition =
+      event.clientY - top < height / 2 ? 'before' : 'after';
+    setDragOverFilter({ id: filterId, position });
+  };
+
+  const handleDrop = (
+    event: DragEvent<HTMLDivElement>,
+    targetFilterId: string,
+  ) => {
+    event.preventDefault();
+
+    const sourceId = draggedFilterId ?? event.dataTransfer.getData('text/plain');
+    const position = dragOverFilter?.position ?? 'before';
+
+    if (sourceId && sourceId !== targetFilterId) {
+      onReorder(sourceId, targetFilterId, position);
+    }
+
+    setDraggedFilterId(null);
+    setDragOverFilter(null);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedFilterId(null);
+    setDragOverFilter(null);
+  };
+
   return (
     <SectionCard
       title="URL 规则"
@@ -39,8 +120,27 @@ export function UrlFilterEditor({
               return (
                 <div
                   key={filter.id}
-                  className={`editor-grid url-grid editor-row px-2 ${filter.enabled ? '' : 'is-disabled'}`}
+                  draggable
+                  onDragStart={(event) => handleDragStart(event, filter.id)}
+                  onDragEnd={handleDragEnd}
+                  onDragOver={(event) => handleDragOver(event, filter.id)}
+                  onDrop={(event) => handleDrop(event, filter.id)}
+                  className={`editor-grid url-grid editor-row is-sortable px-2 ${
+                    draggedFilterId === filter.id ? 'is-dragging' : ''
+                  } ${filter.enabled ? '' : 'is-disabled'} ${
+                    dragOverFilter?.id === filter.id
+                      ? `drag-over-${dragOverFilter.position}`
+                      : ''
+                  }`}
                 >
+                  <button
+                    type="button"
+                    aria-label={`拖拽排序 URL 规则 ${filter.pattern || '未命名'}`}
+                    title="拖拽排序"
+                    className="drag-handle"
+                  >
+                    <GripVertical className="h-3.5 w-3.5" />
+                  </button>
                   <label
                     className="checkbox-wrap"
                     title={

@@ -1,0 +1,25 @@
+src/popup/index.css
+  s_ad97b4bda4fb23::t_975ff89016777f 79,83,98-123,129-149
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "6c5150e32c5db3d20b5cbd175d49519200e35dab",
+  "prompts": {
+    "ad97b4bda4fb234d": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6ace20154854d147c15660e8",
+        "model": "gpt-5.5__dev"
+      },
+      "human_author": "shixinxin.star",
+      "messages": [],
+      "total_additions": 33,
+      "total_deletions": 2,
+      "accepted_lines": 0,
+      "overriden_lines": 0
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {}
+}

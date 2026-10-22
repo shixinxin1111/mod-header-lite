@@ -37,21 +37,21 @@ export function ProfileToolbar({
       <div className="ml-1 flex shrink-0 items-center gap-0.5">
         <button
           type="button"
-          onClick={onExportConfig}
-          aria-label="导出当前配置"
-          title="导出当前配置"
-          className="icon-button neutral h-7 w-7"
-        >
-          <FileDown className="h-3.5 w-3.5" />
-        </button>
-        <button
-          type="button"
           onClick={onCopyHeaderText}
           aria-label="复制请求头文本"
           title="复制请求头文本"
           className="icon-button neutral h-7 w-7"
         >
           <Copy className="h-3.5 w-3.5" />
+        </button>
+        <button
+          type="button"
+          onClick={onExportConfig}
+          aria-label="导出当前配置"
+          title="导出当前配置"
+          className="icon-button neutral h-7 w-7"
+        >
+          <FileDown className="h-3.5 w-3.5" />
         </button>
         <button
           type="button"

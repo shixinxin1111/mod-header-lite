@@ -4,6 +4,7 @@ import {
   createImportedHeaderItems,
   createImportedUrlFilterItems,
   createProfileExportConfig,
+  createProfileHeaderText,
   parseImportedProfileConfig,
 } from '@/shared/importExport';
 import type { ExtensionState, Profile } from '@/shared/types';
@@ -18,6 +19,27 @@ async function copyToClipboard(value: string) {
   }
 
   await navigator.clipboard.writeText(value);
+}
+
+function createExportFileName(profileName: string) {
+  const safeName = profileName
+    .trim()
+    .replace(/[\\/:*?"<>|]+/g, '-')
+    .replace(/\s+/g, '-')
+    .slice(0, 48);
+
+  return `mod-header-lite-${safeName || 'profile'}.json`;
+}
+
+function downloadTextFile(fileName: string, content: string) {
+  const blob = new Blob([content], { type: 'application/json;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+
+  anchor.href = url;
+  anchor.download = fileName;
+  anchor.click();
+  window.setTimeout(() => URL.revokeObjectURL(url), 0);
 }
 
 export function useConfigImportExport(
@@ -43,16 +65,32 @@ export function useConfigImportExport(
     return () => window.clearTimeout(timer);
   }, [feedback]);
 
-  const handleCopyConfig = () => {
+  const handleExportConfig = () => {
     if (!activeProfile) {
       return;
     }
 
     const profileConfig = createProfileExportConfig(activeProfile);
 
-    void copyToClipboard(JSON.stringify(profileConfig, null, 2))
+    try {
+      downloadTextFile(
+        createExportFileName(activeProfile.name),
+        JSON.stringify(profileConfig, null, 2),
+      );
+      setFeedback('当前面板已导出');
+    } catch {
+      setFeedback('导出失败，请重试');
+    }
+  };
+
+  const handleCopyHeaderText = () => {
+    if (!activeProfile) {
+      return;
+    }
+
+    void copyToClipboard(createProfileHeaderText(activeProfile))
       .then(() => {
-        setFeedback('当前面板已复制');
+        setFeedback('请求头文本已复制');
       })
       .catch(() => {
         setFeedback('复制失败，请重试');
@@ -124,7 +162,8 @@ export function useConfigImportExport(
     importError,
     importDialogOpen,
     canRestoreImport: !!restoreState && feedback === '当前面板已导入，可撤销',
-    handleCopyConfig,
+    handleExportConfig,
+    handleCopyHeaderText,
     handleOpenImportDialog,
     handleCancelImport,
     handleConfirmImport,

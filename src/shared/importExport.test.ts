@@ -4,6 +4,7 @@ import {
   createImportedHeaderItems,
   createImportedUrlFilterItems,
   createProfileExportConfig,
+  createProfileHeaderText,
   parseImportedProfileConfig,
 } from '@/shared/importExport';
 import type { Profile } from '@/shared/types';
@@ -54,6 +55,30 @@ describe('createProfileExportConfig', () => {
         },
       ],
     });
+  });
+});
+
+describe('createProfileHeaderText', () => {
+  it('复制当前面板中已启用的请求头键值对文本', () => {
+    expect(createProfileHeaderText(profile)).toBe('x-debug: 1');
+  });
+
+  it('忽略未启用或 key 为空的请求头', () => {
+    expect(
+      createProfileHeaderText({
+        ...profile,
+        headers: [
+          ...profile.headers,
+          { id: 'header-3', key: ' ', value: 'skip', enabled: true },
+          {
+            id: 'header-4',
+            key: ' x-fe-env ',
+            value: ' custom ',
+            enabled: true,
+          },
+        ],
+      }),
+    ).toBe('x-debug: 1\nx-fe-env: custom');
   });
 });
 

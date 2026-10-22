@@ -36,27 +36,25 @@ export function UrlFilterEditor({
   } | null>(null);
 
   const handleDragStart = (
-    event: DragEvent<HTMLDivElement>,
+    event: DragEvent<HTMLButtonElement>,
     filterId: string,
   ) => {
-    const target = event.target;
+    const rowElement = event.currentTarget.closest('.editor-row');
 
-    if (
-      target instanceof HTMLElement &&
-      target.closest('input, textarea, select, button:not(.drag-handle)')
-    ) {
-      event.preventDefault();
+    if (!(rowElement instanceof HTMLElement)) {
       return;
     }
 
     setDraggedFilterId(filterId);
     event.dataTransfer.effectAllowed = 'move';
     event.dataTransfer.setData('text/plain', filterId);
+
+    const { left, top } = rowElement.getBoundingClientRect();
     setRowDragPreview(
-      event.currentTarget,
+      rowElement,
       event.dataTransfer,
-      event.nativeEvent.offsetX,
-      event.nativeEvent.offsetY,
+      event.clientX - left,
+      event.clientY - top,
     );
   };
 
@@ -120,12 +118,9 @@ export function UrlFilterEditor({
               return (
                 <div
                   key={filter.id}
-                  draggable
-                  onDragStart={(event) => handleDragStart(event, filter.id)}
-                  onDragEnd={handleDragEnd}
                   onDragOver={(event) => handleDragOver(event, filter.id)}
                   onDrop={(event) => handleDrop(event, filter.id)}
-                  className={`editor-grid url-grid editor-row is-sortable px-2 ${
+                  className={`editor-grid url-grid editor-row px-2 ${
                     draggedFilterId === filter.id ? 'is-dragging' : ''
                   } ${filter.enabled ? '' : 'is-disabled'} ${
                     dragOverFilter?.id === filter.id
@@ -135,6 +130,9 @@ export function UrlFilterEditor({
                 >
                   <button
                     type="button"
+                    draggable
+                    onDragStart={(event) => handleDragStart(event, filter.id)}
+                    onDragEnd={handleDragEnd}
                     aria-label={`拖拽排序 URL 规则 ${filter.pattern || '未命名'}`}
                     title="拖拽排序"
                     className="drag-handle"

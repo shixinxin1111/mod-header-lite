@@ -95,19 +95,6 @@ textarea:focus-visible {
   background: #f8fafc;
 }
 
-.editor-row.is-sortable {
-  cursor: grab;
-}
-
-.editor-row.is-sortable:active {
-  cursor: grabbing;
-}
-
-.editor-row.is-sortable input,
-.editor-row.is-sortable button:not(.drag-handle) {
-  cursor: auto;
-}
-
 .editor-row.is-dragging {
   background: #eff6ff;
   opacity: 0.42;

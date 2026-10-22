@@ -17,8 +17,8 @@ function LoadingSkeleton() {
   return (
     <div className="flex h-full flex-col overflow-hidden bg-[#f8fafc]">
       <div className="h-10 animate-pulse bg-white" />
-      <div className="grid min-h-0 flex-1 grid-cols-[56px_minmax(0,1fr)]">
-        <div className="bg-[#f1f5f9]" />
+      <div className="grid min-h-0 flex-1 grid-cols-[auto_minmax(0,1fr)]">
+        <div className="min-w-[52px] max-w-[90px] bg-[#f1f5f9]" />
         <div className="grid min-h-0 grid-rows-[34px_minmax(0,1fr)_minmax(0,1fr)]">
           <div className="animate-pulse bg-[#f8fafc]" />
           <div className="animate-pulse bg-white" />
@@ -41,7 +41,8 @@ export default function App() {
     importError,
     importDialogOpen,
     canRestoreImport,
-    handleCopyConfig,
+    handleExportConfig,
+    handleCopyHeaderText,
     handleOpenImportDialog,
     handleCancelImport,
     handleConfirmImport,
@@ -187,7 +188,7 @@ export default function App() {
         </div>
       </header>
 
-      <div className="grid min-h-0 flex-1 grid-cols-[56px_minmax(0,1fr)]">
+      <div className="grid min-h-0 flex-1 grid-cols-[auto_minmax(0,1fr)]">
         <ProfileSidebar
           profiles={state.profiles}
           activeProfileId={state.activeProfileId}
@@ -226,7 +227,8 @@ export default function App() {
               onUpdateProfile={updateActiveProfile}
               onDeleteProfile={() => handleDeleteProfile(activeProfile.id)}
               onAddUrlFilter={() => void handleAddUrlFilter()}
-              onCopyConfig={handleCopyConfig}
+              onExportConfig={handleExportConfig}
+              onCopyHeaderText={handleCopyHeaderText}
               onOpenImportDialog={handleOpenImportDialog}
             />
           ) : (

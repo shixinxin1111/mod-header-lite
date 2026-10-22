@@ -35,27 +35,25 @@ export function HeaderEditor({
   } | null>(null);
 
   const handleDragStart = (
-    event: DragEvent<HTMLDivElement>,
+    event: DragEvent<HTMLButtonElement>,
     headerId: string,
   ) => {
-    const target = event.target;
+    const rowElement = event.currentTarget.closest('.editor-row');
 
-    if (
-      target instanceof HTMLElement &&
-      target.closest('input, textarea, select, button:not(.drag-handle)')
-    ) {
-      event.preventDefault();
+    if (!(rowElement instanceof HTMLElement)) {
       return;
     }
 
     setDraggedHeaderId(headerId);
     event.dataTransfer.effectAllowed = 'move';
     event.dataTransfer.setData('text/plain', headerId);
+
+    const { left, top } = rowElement.getBoundingClientRect();
     setRowDragPreview(
-      event.currentTarget,
+      rowElement,
       event.dataTransfer,
-      event.nativeEvent.offsetX,
-      event.nativeEvent.offsetY,
+      event.clientX - left,
+      event.clientY - top,
     );
   };
 
@@ -116,12 +114,9 @@ export function HeaderEditor({
             {headers.map((header) => (
               <div
                 key={header.id}
-                draggable
-                onDragStart={(event) => handleDragStart(event, header.id)}
-                onDragEnd={handleDragEnd}
                 onDragOver={(event) => handleDragOver(event, header.id)}
                 onDrop={(event) => handleDrop(event, header.id)}
-                className={`editor-grid header-grid editor-row is-sortable px-2 ${
+                className={`editor-grid header-grid editor-row px-2 ${
                   draggedHeaderId === header.id ? 'is-dragging' : ''
                 } ${header.enabled ? '' : 'is-disabled'} ${
                   dragOverHeader?.id === header.id
@@ -131,6 +126,9 @@ export function HeaderEditor({
               >
                 <button
                   type="button"
+                  draggable
+                  onDragStart={(event) => handleDragStart(event, header.id)}
+                  onDragEnd={handleDragEnd}
                   aria-label={`拖拽排序请求头 ${header.key || '未命名'}`}
                   title="拖拽排序"
                   className="drag-handle"

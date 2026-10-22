@@ -36,7 +36,11 @@ function hasStringField(input: Record<string, unknown>, field: string) {
 function validateImportedHeaderItem(
   input: unknown,
 ): input is ImportedHeaderItem {
-  return isRecord(input) && hasStringField(input, 'key') && hasStringField(input, 'value');
+  return (
+    isRecord(input) &&
+    hasStringField(input, 'key') &&
+    hasStringField(input, 'value')
+  );
 }
 
 function validateImportedUrlFilterItem(
@@ -56,6 +60,13 @@ export function createProfileExportConfig(
       .filter((filter) => filter.enabled)
       .map(({ pattern }) => ({ pattern })),
   };
+}
+
+export function createProfileHeaderText(profile: Profile) {
+  return profile.headers
+    .filter((header) => header.enabled && header.key.trim())
+    .map((header) => `${header.key.trim()}: ${header.value.trim()}`)
+    .join('\n');
 }
 
 export function parseImportedProfileConfig(input: string): ValidationResult {

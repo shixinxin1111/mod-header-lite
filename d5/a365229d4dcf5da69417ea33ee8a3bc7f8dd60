@@ -1,0 +1,62 @@
+src/popup/components/ProfileItem.tsx
+  888282ddc55f7501 1-2,9-41,47,53-64
+src/popup/components/ProfileSidebar.tsx
+  888282ddc55f7501 23-25,37,44
+src/popup/components/ProfileToolbar.tsx
+  888282ddc55f7501 1,12-13,23-24,40-51
+src/shared/importExport.test.ts
+  888282ddc55f7501 7,61-81 gitai:{"mixed_line_ranges":[{"Single":77}],"operations":[]}
+src/hooks/useConfigImportExport.ts
+  888282ddc55f7501 7,24-44,68,75-91,93,165-166
+src/shared/importExport.ts
+  888282ddc55f7501 65-71
+src/popup/App.tsx
+  888282ddc55f7501 20-21,44-45,191,230-231
+src/popup/components/ActiveProfileEditor.tsx
+  888282ddc55f7501 15-16,27-28,44-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "d5a365229d4dcf5da69417ea33ee8a3bc7f8dd60",
+  "prompts": {
+    "888282ddc55f7501": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6ada31e08a398e32a43cf9da",
+        "model": "gpt-5.5"
+      },
+      "human_author": "shixinxin.star",
+      "messages": [],
+      "total_additions": 243,
+      "total_deletions": 123,
+      "accepted_lines": 157,
+      "overriden_lines": 1
+    }
+  },
+  "attestation_metadata": {
+    "src/shared/importExport.test.ts": [
+      {
+        "hash": "888282ddc55f7501",
+        "line_ranges": [
+          {
+            "Single": 7
+          },
+          {
+            "Range": [
+              61,
+              81
+            ]
+          }
+        ],
+        "mixed_line_ranges": [
+          {
+            "Single": 77
+          }
+        ],
+        "operations": []
+      }
+    ]
+  },
+  "remote_transcripts": {}
+}

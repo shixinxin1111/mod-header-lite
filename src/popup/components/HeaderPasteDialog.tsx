@@ -1,4 +1,4 @@
-type ConfigImportDialogProps = {
+type HeaderPasteDialogProps = {
   value: string;
   error: string | null;
   onChange: (value: string) => void;
@@ -6,27 +6,27 @@ type ConfigImportDialogProps = {
   onConfirm: () => void;
 };
 
-export function ConfigImportDialog({
+export function HeaderPasteDialog({
   value,
   error,
   onChange,
   onCancel,
   onConfirm,
-}: ConfigImportDialogProps) {
+}: HeaderPasteDialogProps) {
   return (
     <div className="fixed inset-0 z-20 flex items-center justify-center bg-[rgba(15,23,42,0.24)] px-5">
       <div
         role="dialog"
         aria-modal="true"
-        aria-labelledby="config-import-title"
+        aria-labelledby="header-paste-title"
         className="w-full max-w-140 rounded-lg bg-white shadow-[0_18px_44px_rgba(15,23,42,0.18)] ring-1 ring-[#dbe3ee]"
       >
         <div className="border-b border-[#e2e8f0] px-4 py-3">
           <h2
-            id="config-import-title"
+            id="header-paste-title"
             className="m-0 text-[14px] font-bold text-[#172033]"
           >
-            导入配置
+            添加请求头
           </h2>
         </div>
 
@@ -35,10 +35,10 @@ export function ConfigImportDialog({
             autoFocus
             value={value}
             onChange={(event) => onChange(event.target.value)}
-            rows={10}
+            rows={8}
             spellCheck={false}
-            placeholder="粘贴当前面板的 JSON 配置"
-            className="min-h-45 w-full resize-none rounded-md border border-[#dbe3ee] bg-[#f8fafc] px-3 py-2 font-mono text-[12px] leading-5 text-[#172033] outline-none transition focus:border-[#60a5fa] focus:bg-white focus:shadow-[0_0_0_2px_rgba(37,99,235,0.1)]"
+            placeholder={'每行一个请求头，例如：\nx-fe-env: canvas_agent\nAuthorization: Bearer xxx'}
+            className="min-h-40 w-full resize-none rounded-md border border-[#dbe3ee] bg-[#f8fafc] px-3 py-2 font-mono text-[12px] leading-5 text-[#172033] outline-none transition focus:border-[#60a5fa] focus:bg-white focus:shadow-[0_0_0_2px_rgba(37,99,235,0.1)]"
           />
 
           {error ? (

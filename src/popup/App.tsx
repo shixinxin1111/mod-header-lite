@@ -2,11 +2,11 @@ import { AlertTriangle, ShieldCheck } from 'lucide-react';
 import { useMemo } from 'react';
 
 import { updateActionIcon } from '@/background/icon';
-import { useConfigImportExport } from '@/hooks/useConfigImportExport';
 import { useExtensionState } from '@/hooks/useExtensionState';
+import { useHeaderTextActions } from '@/hooks/useHeaderTextActions';
 import { ActiveProfileEditor } from '@/popup/components/ActiveProfileEditor';
-import { ConfigImportDialog } from '@/popup/components/ConfigImportDialog';
 import { ConfigToast } from '@/popup/components/ConfigToast';
+import { HeaderPasteDialog } from '@/popup/components/HeaderPasteDialog';
 import { ProfileSidebar } from '@/popup/components/ProfileSidebar';
 import { Switch } from '@/popup/components/Switch';
 import { createProfile, createUrlFilterItem } from '@/shared/defaults';
@@ -37,18 +37,15 @@ export default function App() {
   );
   const {
     feedback,
-    importDraft,
-    importError,
-    importDialogOpen,
-    canRestoreImport,
-    handleExportConfig,
+    pasteDraft,
+    pasteError,
+    pasteDialogOpen,
     handleCopyHeaderText,
-    handleOpenImportDialog,
-    handleCancelImport,
-    handleConfirmImport,
-    handleRestoreImport,
-    handleChangeImportDraft,
-  } = useConfigImportExport(state, activeProfile, updateState);
+    handleOpenPasteDialog,
+    handleCancelPaste,
+    handleChangePasteDraft,
+    handleConfirmPaste,
+  } = useHeaderTextActions(activeProfile, updateState);
 
   if (loading || !state) {
     return <LoadingSkeleton />;
@@ -227,9 +224,8 @@ export default function App() {
               onUpdateProfile={updateActiveProfile}
               onDeleteProfile={() => handleDeleteProfile(activeProfile.id)}
               onAddUrlFilter={() => void handleAddUrlFilter()}
-              onExportConfig={handleExportConfig}
               onCopyHeaderText={handleCopyHeaderText}
-              onOpenImportDialog={handleOpenImportDialog}
+              onOpenPasteDialog={handleOpenPasteDialog}
             />
           ) : (
             <>
@@ -241,21 +237,17 @@ export default function App() {
           )}
         </div>
       </div>
-      {importDialogOpen ? (
-        <ConfigImportDialog
-          value={importDraft}
-          error={importError}
-          onChange={handleChangeImportDraft}
-          onCancel={handleCancelImport}
-          onConfirm={handleConfirmImport}
+      {pasteDialogOpen ? (
+        <HeaderPasteDialog
+          value={pasteDraft}
+          error={pasteError}
+          onChange={handleChangePasteDraft}
+          onCancel={handleCancelPaste}
+          onConfirm={handleConfirmPaste}
         />
       ) : null}
       {feedback ? (
-        <ConfigToast
-          message={feedback}
-          canUndo={canRestoreImport}
-          onUndo={handleRestoreImport}
-        />
+        <ConfigToast message={feedback} />
       ) : null}
     </div>
   );

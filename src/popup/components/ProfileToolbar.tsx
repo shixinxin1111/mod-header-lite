@@ -1,4 +1,4 @@
-import { Copy, FileDown, FileUp, Trash2 } from 'lucide-react';
+import { ClipboardPaste, Copy, Trash2 } from 'lucide-react';
 
 import { ProfileNameEditor } from '@/popup/components/ProfileNameEditor';
 import type { Profile } from '@/shared/types';
@@ -9,9 +9,8 @@ type ProfileToolbarProps = {
   enabledFilterCount: number;
   onRename: (name: string) => void;
   onDelete: () => void;
-  onExportConfig: () => void;
   onCopyHeaderText: () => void;
-  onOpenImportDialog: () => void;
+  onOpenPasteDialog: () => void;
 };
 
 export function ProfileToolbar({
@@ -20,9 +19,8 @@ export function ProfileToolbar({
   enabledFilterCount,
   onRename,
   onDelete,
-  onExportConfig,
   onCopyHeaderText,
-  onOpenImportDialog,
+  onOpenPasteDialog,
 }: ProfileToolbarProps) {
   return (
     <div className="flex min-w-0 items-center border-b border-[#e2e8f0] bg-[#f8fafc] pl-0 pr-2">
@@ -46,21 +44,12 @@ export function ProfileToolbar({
         </button>
         <button
           type="button"
-          onClick={onExportConfig}
-          aria-label="导出当前配置"
-          title="导出当前配置"
+          onClick={onOpenPasteDialog}
+          aria-label="粘贴添加请求头"
+          title="粘贴添加请求头"
           className="icon-button neutral h-7 w-7"
         >
-          <FileDown className="h-3.5 w-3.5" />
-        </button>
-        <button
-          type="button"
-          onClick={onOpenImportDialog}
-          aria-label="导入配置"
-          title="导入配置"
-          className="icon-button neutral h-7 w-7"
-        >
-          <FileUp className="h-3.5 w-3.5" />
+          <ClipboardPaste className="h-3.5 w-3.5" />
         </button>
       </div>
       <button

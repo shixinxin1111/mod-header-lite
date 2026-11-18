@@ -12,9 +12,8 @@ type ActiveProfileEditorProps = {
   onUpdateProfile: (updater: (profile: Profile) => Profile) => void;
   onDeleteProfile: () => void;
   onAddUrlFilter: () => void;
-  onExportConfig: () => void;
   onCopyHeaderText: () => void;
-  onOpenImportDialog: () => void;
+  onOpenPasteDialog: () => void;
 };
 
 export function ActiveProfileEditor({
@@ -24,9 +23,8 @@ export function ActiveProfileEditor({
   onUpdateProfile,
   onDeleteProfile,
   onAddUrlFilter,
-  onExportConfig,
   onCopyHeaderText,
-  onOpenImportDialog,
+  onOpenPasteDialog,
 }: ActiveProfileEditorProps) {
   return (
     <>
@@ -41,9 +39,8 @@ export function ActiveProfileEditor({
           }))
         }
         onDelete={onDeleteProfile}
-        onExportConfig={onExportConfig}
         onCopyHeaderText={onCopyHeaderText}
-        onOpenImportDialog={onOpenImportDialog}
+        onOpenPasteDialog={onOpenPasteDialog}
       />
 
       <HeaderEditor

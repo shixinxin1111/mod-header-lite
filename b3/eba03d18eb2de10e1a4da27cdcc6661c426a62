@@ -1,0 +1,37 @@
+src/shared/headerText.test.ts
+  d9c6b5cacb452023 1-98
+src/popup/components/ProfileToolbar.tsx
+  d9c6b5cacb452023 1,13,23,47-49,52
+src/hooks/useHeaderTextActions.ts
+  d9c6b5cacb452023 1-115
+src/popup/components/ConfigToast.tsx
+  d9c6b5cacb452023 5
+src/popup/components/ActiveProfileEditor.tsx
+  d9c6b5cacb452023 16,27,43
+src/popup/components/HeaderPasteDialog.tsx
+  d9c6b5cacb452023 1-70
+src/popup/App.tsx
+  d9c6b5cacb452023 6,9,40-42,44-48,228,240-246,250
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "b3eba03d18eb2de10e1a4da27cdcc6661c426a62",
+  "prompts": {
+    "d9c6b5cacb452023": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6afd56b3ea2d6a7d37f9af04",
+        "model": "deepseek-v4.1-flash"
+      },
+      "human_author": "shixinxin.star",
+      "messages": [],
+      "total_additions": 313,
+      "total_deletions": 66,
+      "accepted_lines": 313,
+      "overriden_lines": 0
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {}
+}
